@@ -13,9 +13,6 @@ use std::env;
 use reqwest::blocking::Client;
 use std::error::Error;
 
-mod dial;
-use dial::Dial;
-
 fn main() -> Result<(), Box<dyn Error>> {
     let input = get_input()?;
 
@@ -39,4 +36,9 @@ fn get_input() -> Result<Vec<String>, Box<dyn Error>> {
 
     Ok(lines)
 }
-" >> $NAME/src/main.rs
+" > $NAME/src/main.rs
+
+echo  "dotenv = \"0.15.0\"
+reqwest = { version = \"0.12.24\" , features = [\"blocking\"] }
+" >> $NAME/Cargo.toml
+
