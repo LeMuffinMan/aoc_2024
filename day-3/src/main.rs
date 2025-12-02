@@ -39,12 +39,39 @@ fn extract_tuple(line: &str) -> Option<(i32, i32)> {
     return None;
 }
 
+fn get_todo_sections(input: &Vec<String>) -> Vec<String> {
+    let mut do_op = true;
+    let line = input.join("");
+    let mut res = Vec::new();
+    let mut start = 0;
+    while start < line.len() {
+        if do_op {
+            if let Some(dont_pos) = line[start..].find("don't()") {
+                res.push(line[start..start + dont_pos].to_string());
+                start = start + dont_pos + 7;
+                do_op = false;
+            } else {
+                res.push(line[start..line.len()].to_string());
+                break;
+            }
+        } else if !do_op {
+            if let Some(do_pos) = line[start..].find("do()") {
+                start = start + do_pos + 4;
+                do_op = true;
+            } else {
+                break;
+            }
+        }
+    }
+    res
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     let input = get_input()?;
-    println!("{:?}", input);
+    let slices = get_todo_sections(&input);
     let mut res = 0;
     let pattern = "mul(";
-    for line in &input {
+    for line in &slices {
         let mut start = 0;
         while let Some(pos) = line[start..].find(pattern) {
             let pat_start = start + pos;
