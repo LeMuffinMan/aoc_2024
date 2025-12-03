@@ -48,29 +48,45 @@ fn get_rules_map(rules: Vec<String>) -> HashMap::<String, Vec<String>> {
     map
 }
 
+fn sort_list(list: &String, rules_map: &HashMap::<String, Vec<String>>) -> usize {
+    let mut pages: Vec<&str> = list.split(',').collect();
+    let mut sorted_list = pages.clone();
+    println!("{:?}", pages);
+    while let Some(page) = pages.pop() {
+        sorted_list.pop();
+        let forbidden_pages = &rules_map[page];
+        for j in 0..sorted_list.len() {
+            if forbidden_pages.contains(&sorted_list[j].to_string()) {
+                sorted_list.insert(j, page);
+            }
+        }
+    }
+    println!("{:?}", sorted_list);
+    sorted_list[pages.len() / 2].parse().unwrap()
+}
+
+// 4623 -> too high
+
 fn main() -> Result<(), Box<dyn Error>> {
     let input = get_input()?;
     let (rules, updates) = extract(input);
     let rules_map = get_rules_map(rules);
-    println!("{:?}", rules_map);
-    println!("{:?}", updates);
-    let mut validated_updates = Vec::new();
+    let mut to_sort_updates = Vec::new();
     for list in updates {
-        if check_list(&list, &rules_map) {
-            validated_updates.push(list);
+        if !check_list(&list, &rules_map) {
+            to_sort_updates.push(list.clone());
         }
     }
     let mut count: usize = 0;
-    for list in validated_updates {
-        let digits: Vec<&str> = list.split(',').collect();
-        count += digits[digits.len() / 2].parse::<usize>().unwrap();
+    for list in to_sort_updates {
+        count += sort_list(&list, &rules_map);
     }
     println!("password = {count}");
     Ok(())
 }
 
 fn get_input() -> Result<Vec<String>, Box<dyn Error>> {
-    dotenv::from_path("../.env").ok();
+    dotenv::from_path("../../.env").ok();
     let session_cookie = env::var("AOC_SESSION")?;
 
     let url = "https://adventofcode.com/2024/day/5/input";
