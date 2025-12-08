@@ -1,4 +1,3 @@
-
 #[derive(Copy, Clone)]
 pub enum Direction {
     NorthEast,
@@ -15,10 +14,22 @@ pub struct Point {
 impl Point {
     pub fn delta(&self, dir: Direction) -> Point {
         match dir {
-            Direction::NorthEast => Point {x: self.x - 1, y: self.y + 1},
-            Direction::SouthEast => Point {x: self.x + 1, y: self.y + 1},
-            Direction::NorthWest => Point {x: self.x + 1, y: self.y - 1},
-            Direction::SouthWest => Point {x: self.x - 1, y: self.y - 1},
+            Direction::NorthEast => Point {
+                x: self.x - 1,
+                y: self.y + 1,
+            },
+            Direction::SouthEast => Point {
+                x: self.x + 1,
+                y: self.y + 1,
+            },
+            Direction::NorthWest => Point {
+                x: self.x + 1,
+                y: self.y - 1,
+            },
+            Direction::SouthWest => Point {
+                x: self.x - 1,
+                y: self.y - 1,
+            },
         }
     }
 }
@@ -63,4 +74,3 @@ impl Direction {
         }
     }
 }
-
